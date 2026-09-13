@@ -90,7 +90,7 @@ EOF
   gn gen "$OUT_DIR"
 fi
 
-autoninja --offline -C "$OUT_DIR" libEGL libGLESv2
+autoninja --offline -C "$OUT_DIR" libEGL libGLESv2 libGLESv1_CM libfeature_support
 
 popd >/dev/null
 
@@ -101,13 +101,11 @@ mkdir -p "$OUT_ROOT/lib/$ABI" "$OUT_ROOT/symbols/$ABI" "$OUT_ROOT/include"
 
 echo "$ANGLE_COMMIT" > "$OUT_ROOT/commit.txt"
 
-cp "angle/out/$PLATFORM/$ARCH/libEGL.so"    "$OUT_ROOT/lib/$ABI/"
-cp "angle/out/$PLATFORM/$ARCH/libGLESv2.so" "$OUT_ROOT/lib/$ABI/"
+cp "angle/out/$PLATFORM/$ARCH"/lib*.so "$OUT_ROOT/lib/$ABI/"
 
 # Keep unstripped binaries as symbol files for crash symbolication.
-if [ -f "angle/out/$PLATFORM/$ARCH/lib.unstripped/libEGL.so" ]; then
-  cp "angle/out/$PLATFORM/$ARCH/lib.unstripped/libEGL.so"    "$OUT_ROOT/symbols/$ABI/"
-  cp "angle/out/$PLATFORM/$ARCH/lib.unstripped/libGLESv2.so" "$OUT_ROOT/symbols/$ABI/"
+if [ -f "angle/out/$PLATFORM/$ARCH/lib.unstripped/libEGL_angle.so" ]; then
+  cp "angle/out/$PLATFORM/$ARCH/lib.unstripped/"lib*.so "$OUT_ROOT/symbols/$ABI/"
 fi
 
 cp -R angle/include/KHR   "$OUT_ROOT/include/"

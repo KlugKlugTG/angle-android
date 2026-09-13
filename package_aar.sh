@@ -68,8 +68,7 @@ for d in "$STAGING"/angle-*/; do
   for abidir in "$d"/lib/*/; do
     abi=$(basename "$abidir")
     mkdir -p "$AAR_ROOT/jni/$abi"
-    cp "$abidir"libEGL.so    "$AAR_ROOT/jni/$abi/"
-    cp "$abidir"libGLESv2.so "$AAR_ROOT/jni/$abi/"
+    cp "$abidir"lib*.so "$AAR_ROOT/jni/$abi/"
   done
 done
 
@@ -95,7 +94,9 @@ for abidir in "$AAR_ROOT"/jni/*/; do
     DEST="$AAR_ROOT/prefab/modules/$mod/libs/android.$abi"
     mkdir -p "$DEST"
     sed "s/%ABI%/$abi/" "$HERE/aar/abi.json.template" > "$DEST/abi.json"
-    cp "$abidir/$mod.so" "$DEST/$mod.so"
+    src="$abidir/$mod.so"
+    [ -f "$src" ] || src=$(ls "$abidir"/$mod*.so 2>/dev/null | head -n 1)
+    [ -n "$src" ] && [ -f "$src" ] && cp "$src" "$DEST/$mod.so" || true
   done
 done
 

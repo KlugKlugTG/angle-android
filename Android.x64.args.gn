@@ -29,4 +29,4 @@ use_thin_lto = false
 enable_rust = false
 use_sysroot = false
 treat_warnings_as_errors = false
-angle_libs_suffix = ""
+angle_libs_suffix = "_angle"
